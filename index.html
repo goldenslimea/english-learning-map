@@ -1,48 +1,42 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Pre-A1 至 B2 的儿童英语能力路径，默认突出孩子 A1–A2 附近的学习内容。">
-  <title>英语成长地图 · Pre-A1 → B2</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Pre-A1 至 B2 的英语成长地图。从一个小任务开始，逐步观察听说读写。">
+<title>英语成长地图 · Pre-A1 → B2</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<a class="skip" href="#main">跳到学习地图</a>
+<a class="skip" href="#main">跳到练习</a>
 <header class="header">
   <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">E</span>英语成长地图</a>
-  <nav aria-label="主导航"><a href="#main">学习地图</a><a href="#start">从哪里开始</a><a href="#sources">依据与说明</a><a href="https://github.com/goldenslimea/english-learning-map">项目仓库</a></nav>
-</header>
-<section class="intro">
-  <div><p class="eyebrow">YOUNG LEARNERS / PRE-A1 → B2</p><h1>看见下一步，<br>也看见更远的成长。</h1><p class="lead">Pre-A1 到 B2 的 90 个能力点。默认聚焦孩子 A1–A2 附近，也能展开完整成长路径。</p></div>
-  <aside class="orientation"><span class="pill">Year 4 · 适龄内容</span><h2>先观察，再确定起点</h2><p>当前范围来自家长描述，尚未分项测评。每个能力点均从「待确认」开始；Year 4 不等同于国内四年级，也不决定英语等级。</p><p class="small">图中阶段是教学安排建议，不是官方 CEFR 知识点分级。</p></aside>
-</section>
-<main id="main">
-  <div class="section-heading"><div><p class="eyebrow">LEARNING MAP</p><h2>一张地图，看眼前，也看远处</h2></div><div class="tools"><button id="export" type="button">导出观察记录</button><label class="file-label">导入记录<input id="import" type="file" accept="application/json,.json"></label></div></div>
-  <div class="phase-legend" aria-label="阶段图例"><span><i class="dot foundation"></i>向前查基础 · Pre-A1</span><span><i class="dot bridge"></i>孩子附近 · A1–A2</span><span><i class="dot next"></i>向后看目标 · B1–B2</span><span>虚线箭头：建议先练 → 后练</span></div>
-  <p id="message" role="status" aria-live="polite"></p>
-  <div class="workspace">
-    <aside class="catalog" aria-label="能力点目录">
-      <label for="scope">学习范围</label><select id="scope"><option value="focus">孩子附近 · A1–A2</option><option value="all">全路径 · Pre-A1–B2</option><option>Pre-A1</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option></select>
-      <label for="domain">能力领域</label><select id="domain"><option value="">全部领域</option></select>
-      <label for="search">查找能力点</label><input id="search" type="search" placeholder="如：跟读、过去、故事">
-      <p id="count" class="small"></p><div id="list">正在加载…</div>
-    </aside>
-    <section class="map-area" aria-label="能力关系图">
-      <div class="map-toolbar"><div class="view-buttons" role="group" aria-label="地图范围"><button type="button" id="view-overview" aria-pressed="true">阶段路线</button><button type="button" id="view-nearby" aria-pressed="false">选中点附近</button></div><button type="button" id="fit">适配画面</button></div>
-      <div id="cy" role="img" aria-label="能力关系图。所有能力点及前后关系也可通过目录和详情中的按钮访问。"></div>
-      <p class="map-hint" id="map-hint">点选能力点，查看任务和练习方法。可拖动、缩放。</p>
-    </section>
-    <aside id="detail" class="detail" aria-label="选中能力点详情" aria-live="polite">正在加载…</aside>
+  <div class="header-actions">
+    <nav class="mode-nav" aria-label="使用方式"><button id="mode-practice" type="button" aria-pressed="true">开始练习</button><button id="mode-map" type="button" aria-pressed="false">学习全图</button></nav>
+    <details class="records-panel"><summary>观察记录</summary><div class="records-content"><h2>备份与转移</h2><p>记录只保存在当前浏览器，可导出后在另一台设备导入。</p><button id="export" type="button">导出观察记录</button><label class="file-label">导入记录<input id="import" type="file" accept="application/json,.json"></label><p id="record-count" class="small">尚无观察记录</p></div></details>
   </div>
-  <section id="start" class="start-section"><p class="eyebrow">FIRST STEPS</p><h2>第一次怎么用</h2><div class="start-grid"><article><span class="step-number">01</span><h3>先各试一项</h3><p>分两三天观察听、说、读、写，顺便看语法和词汇。每次约 10–15 分钟，是可调整的起步安排。</p><div id="entry-points" class="entry-points"></div></article><article><span class="step-number">02</span><h3>卡在哪里，往前找</h3><p>点「选中点附近」查看前置能力。读不懂短文，分别检查解码、词义和句子理解；能读出来不代表已经理解。</p><p>所有边都是可调整的建议关系，不锁课程；答对一个任务也不会自动勾选其他能力。</p></article><article><span class="step-number">03</span><h3>跟读之后，再用一次</h3><p>先听懂 → 分句模仿 → 关掉录音 → 换内容自己说。跟读每天可先试 5–8 分钟，其余时间留给理解、问答、阅读或写作。</p><p>建议换材料、隔几天再观察。这里的任务是家庭观察样例，不用于判定 CEFR 等级。</p></article></div></section>
-  <section id="sources" class="sources"><h2>依据与说明</h2><p>结构借鉴 <a href="https://github.com/xiaoyang111222/cn-math-taxonomy" target="_blank" rel="noopener noreferrer">xiaoyang111222 / cn-math-taxonomy</a> 的知识点、观察标准、任务与前置关系，并使用其图形库。本版仅保留独立组织的英语能力架构，移除了原版其他学科、教材目录、题库、诊断页面和部署配置。保留改编署名与 CC BY-NC 4.0 许可。</p><p>能力范围参考剑桥英语 <a href="https://www.cambridgeenglish.org/exams-and-tests/starters/">Pre A1 Starters</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/movers/">A1 Movers</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/flyers/">A2 Flyers</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/preliminary-for-schools/">B1 Preliminary for Schools</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/first-for-schools/">B2 First for Schools</a> 的公开能力说明，练习设计参考 <a href="https://www.britishcouncil.org/voices-magazine/how-help-children-speak-english-confidence">British Council 儿童口语建议</a>。</p><p>具体节点、顺序、阶段对应与任务为本版教学设计推断，未经教师或测评校准。全路径是能力骨架，不是穷尽的课程大纲；尤其 B1/B2 的微型任务需用更长、更多样材料复核。完成单题不代表达到该级别。</p><p>观察记录只保存在当前浏览器，可导出备份或转移设备；不会自动同步到 GitHub。听力提供成人朗读脚本；可选设备语音仅作练习示范，不提供口语自动评分。</p></section>
+</header>
+<main id="main">
+  <section id="practice-panel" aria-label="日常练习">
+    <div class="welcome"><div><p class="eyebrow">一步一步，把英语用起来</p><h1>今天，先练一小步。</h1><p class="lead">选一个能力，做个小任务，再记下这次的表现。</p></div><span class="context-tag">Year 4 <span aria-hidden="true">·</span> A1–A2 附近</span></div>
+    <ol class="steps" aria-label="使用步骤"><li><span>1</span>选能力</li><li><span>2</span>做任务</li><li><span>3</span>记表现</li></ol>
+    <section class="choose-section" aria-label="选择练习能力"><h2>这次想练什么？</h2><div id="domain-picker" class="domain-picker"></div><div class="topic-picker"><label for="session-topic">选一个小目标</label><select id="session-topic"></select><p id="session-hint" class="small">从熟悉内容开始，按孩子的表现调整。</p></div></section>
+  </section>
+  <section id="map-panel" aria-label="学习全图" hidden>
+    <div class="map-heading"><div><p class="eyebrow">Pre-A1 → B2 · 90 个能力点</p><h1>看看前后，怎么连接。</h1><p class="lead">默认看 A1–A2 附近，也可以展开完整路径。点能力点即可查看练习。</p></div><button id="open-task" type="button">打开当前练习 ↓</button></div>
+    <div class="map-workspace">
+      <aside class="catalog" aria-label="能力点目录"><details id="catalog-details" open><summary>范围与能力目录</summary><div class="filter-fields"><label for="scope">学习范围</label><select id="scope"><option value="focus">孩子附近 · A1–A2</option><option value="all">全路径 · Pre-A1–B2</option><option>Pre-A1</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option></select><label for="domain">能力领域</label><select id="domain"><option value="">全部领域</option></select><label for="search">查找能力点</label><input id="search" type="search" placeholder="如：跟读、过去、故事"></div><p id="count" class="small"></p><div id="list">正在加载…</div></details></aside>
+      <section class="map-area" aria-label="能力关系图"><div class="map-toolbar"><div role="group" aria-label="地图显示方式"><button id="view-overview" type="button" aria-pressed="true">阶段路线</button><button id="view-nearby" type="button" aria-pressed="false">前后关系</button></div><button id="fit" type="button">适配画面</button></div><div id="cy" role="img" aria-label="能力关系图；详情中的关系按钮提供相同内容。"></div><div class="phase-legend"><span><i class="foundation"></i>向前查基础</span><span><i class="bridge"></i>A1–A2 附近</span><span><i class="next"></i>向后看目标</span></div><p id="map-hint" class="small"></p></section>
+    </div>
+  </section>
+  <p id="message" role="status" aria-live="polite"></p>
+  <section id="detail" class="detail" aria-label="当前练习">正在加载练习…</section>
+  <section class="help-area">
+    <details id="start"><summary>第一次使用？看这三步</summary><div class="help-content"><ol><li>先选听、说、读、写中的一项，做一个短任务；熟悉材料和新材料可以分开观察。</li><li>需要提示时记下提示程度；本次自己完成后，换内容、隔几天再试。</li><li>想补基础或了解后续方向，打开「学习全图」。待确认表示尚未观察，不表示孩子不会。</li></ol><p>跟读可以从每天 5–8 分钟开始试：先听懂，再模仿，撤去示范后换内容自己说。时间按孩子状态调整。</p></div></details>
+    <details id="sources"><summary>适用范围、依据与隐私</summary><div class="help-content"><p>范围覆盖 Pre-A1 到 B2，六领域共 90 个能力点、113 条建议衔接。Year 4 和 A1–A2 来自家长描述，尚未分项测评；年龄和年级不直接决定英语等级。</p><p>具体节点、阶段对应和任务是教学设计推断，不是官方逐项课程表。微型任务需换材料复核，尤其 B1/B2 需更长、更多样的任务与教师观察。完成单题不代表达到某级别。</p><p>参考剑桥英语 <a href="https://www.cambridgeenglish.org/exams-and-tests/starters/">Pre A1 Starters</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/movers/">A1 Movers</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/flyers/">A2 Flyers</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/preliminary-for-schools/">B1 Preliminary for Schools</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/first-for-schools/">B2 First for Schools</a> 与 <a href="https://www.britishcouncil.org/voices-magazine/how-help-children-speak-english-confidence">British Council 儿童口语建议</a>。</p><p>观察记录只存当前浏览器，不上传 GitHub 或服务器；更换访问地址、设备或清除数据前请导出。设备语音仅作练习示范，没有口语自动评分。</p><p>结构借鉴 <a href="https://github.com/xiaoyang111222/cn-math-taxonomy">xiaoyang111222/cn-math-taxonomy</a>，仅保留本版独立英语架构和必要图形库，沿用 CC BY-NC 4.0 及依赖各自许可。</p></div></details>
+  </section>
 </main>
-<footer><span>一点点听懂，一点点说出来。</span><a href="LICENSE">CC BY-NC 4.0</a><a href="https://github.com/goldenslimea/english-learning-map">项目仓库</a></footer>
-<script src="assets/vendor/cytoscape.min.js"></script>
-<script src="assets/vendor/dagre.min.js"></script>
-<script src="assets/vendor/cytoscape-dagre.js"></script>
-<script src="model.js"></script>
-<script src="app.js"></script>
+<footer><span>一点点听懂，一点点说出来。</span><div><a href="LICENSE">许可</a><a href="https://github.com/goldenslimea/english-learning-map">项目与文档</a></div></footer>
+<script src="assets/vendor/cytoscape.min.js"></script><script src="assets/vendor/dagre.min.js"></script><script src="assets/vendor/cytoscape-dagre.js"></script><script src="model.js"></script><script src="app.js"></script>
 </body>
 </html>

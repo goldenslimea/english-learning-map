@@ -2,9 +2,8 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const M = window.EnglishMap;
-  const phases = {foundation:'向前查基础',bridge:'孩子附近',next:'向后看目标'};
   const storageKey = 'youngEnglishMap.observations.v1';
-  let topics, deps, profile, byId, cy, selected, records = {}, view = 'overview';
+  let topics, deps, profile, byId, cy, selected, records = {}, view = 'overview', mode = 'practice';
   const overview = document.createElement('div');
   overview.id = 'overview';
   $('cy').before(overview);
@@ -23,7 +22,7 @@
     const query = $('search').value.trim().toLocaleLowerCase();
     return topics.filter(t => ($('scope').value==='all' || ($('scope').value==='focus' ? profile.focus_levels.includes(t.level) : t.level===$('scope').value)) && (!$('domain').value || t.domain === $('domain').value) && (!query || [t.name,t.description,t.domain,t.id,t.practice].join(' ').toLocaleLowerCase().includes(query)));
   }
-  function choose(id) {
+  function choose(id, scroll = mode === 'map') {
     if (!byId.has(id)) return;
     if ('speechSynthesis' in window) speechSynthesis.cancel();
     selected=id;
@@ -32,8 +31,8 @@
     else if (!['focus','all',byId.get(id).level].includes($('scope').value)) $('scope').value=byId.get(id).level;
     if ($('domain').value && $('domain').value!==byId.get(id).domain) $('domain').value='';
     if (!currentTopics().some(t=>t.id===id)) $('search').value='';
-    renderList(); renderDetail(); renderMap();
-    if (matchMedia('(max-width:650px)').matches) $('detail').scrollIntoView({behavior:'smooth',block:'start'});
+    renderList(); renderDetail(); renderSessionPicker(); renderMap();
+    if (scroll) scrollToTask();
   }
   function nodeButton(t, className) {
     const b = button(t.name,()=>choose(t.id),className);
@@ -104,21 +103,10 @@
     $('view-nearby').setAttribute('aria-pressed',String(view==='nearby'));
     overview.hidden=view!=='overview'; $('cy').hidden=view!=='nearby';
     $('fit').disabled=view==='overview';
-    if (view==='overview') {
+    if (view==='overview' || mode!=='map') {
       renderOverview();
-      $('map-hint').textContent='按领域查看阶段路线；切换学习范围可展开全路径。点「选中点附近」查看跨领域衔接。';
+      $('map-hint').textContent='按领域查看阶段路线；切换学习范围可展开全路径。点「前后关系」查看跨领域衔接。';
     } else renderGraph();
-  }
-  function appendSection(title, content) { $('detail').append(el('h3',title),content); }
-  function relationSection(title, edges, key) {
-    const container=el('div');
-    if (!edges.length) container.append(el('p','本图未设置更早的前置；可直接观察。','small'));
-    edges.forEach(edge=>{
-      const target=byId.get(edge[key]);
-      const b=button(target.name,()=>choose(target.id),'relation');
-      b.append(el('small',edge.reason)); container.append(b);
-    });
-    appendSection(title,container);
   }
   function speak(script) {
     if (!('speechSynthesis' in window)) { notify('此设备不支持示范朗读，请由成人按脚本朗读。',true); return; }
@@ -128,57 +116,120 @@
     speech.onerror=()=>notify('设备语音暂不可用，请由成人朗读脚本。',true);
     speechSynthesis.speak(speech);
   }
+  function scrollToTask() {
+    $('detail').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+  }
+  function setMode(next) {
+    mode=next;
+    $('practice-panel').hidden=mode!=='practice';
+    $('map-panel').hidden=mode!=='map';
+    $('mode-practice').setAttribute('aria-pressed',String(mode==='practice'));
+    $('mode-map').setAttribute('aria-pressed',String(mode==='map'));
+    renderMap();
+    $('main').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
+  }
+  function renderSessionPicker() {
+    const t=byId.get(selected);
+    const shortNames=['听力','口语','阅读','写作','语法','词汇'];
+    const subtitles=['听懂信息','开口表达','理解文章','写清意思','组织句子','积累表达'];
+    $('domain-picker').replaceChildren();
+    profile.domains.forEach((domain,index)=>{
+      const b=button('',()=>{
+        const current=byId.get(selected);
+        const preferred=profile.entry_points.map(id=>byId.get(id)).find(row=>row.domain===domain);
+        const target=profile.focus_levels.includes(current.level)?preferred:topics.find(row=>row.domain===domain && row.level===current.level);
+        choose(target.id,false);
+      },'domain-choice');
+      b.setAttribute('aria-pressed',String(t.domain===domain));
+      b.append(el('span',shortNames[index],'domain-name'),el('small',subtitles[index]));
+      $('domain-picker').append(b);
+    });
+    $('session-topic').replaceChildren();
+    const levels=profile.levels.filter(level=>profile.focus_levels.includes(level)||level===t.level);
+    levels.forEach(level=>{
+      const group=el('optgroup');group.label=level+(profile.focus_levels.includes(level)?' · 孩子附近':' · 当前查看');
+      topics.filter(row=>row.domain===t.domain && row.level===level).forEach(row=>{
+        const option=el('option',row.name);option.value=row.id;group.append(option);
+      });
+      $('session-topic').append(group);
+    });
+    $('session-topic').value=selected;
+    $('session-hint').textContent=profile.focus_levels.includes(t.level)?'这里先列出该领域 A1–A2 附近的目标。完整路径在「学习全图」。':'当前查看 '+t.level+' 目标；孩子的实际起点仍需分项观察。';
+    updateRecordCount();
+  }
+  function updateRecordCount() {
+    const n=Object.keys(records).length;
+    $('record-count').textContent=n?`已记录 ${n} 项能力的观察。`:'尚无观察记录。待确认表示还没观察。';
+  }
+  function fold(title,content,className='more-section') {
+    const d=el('details',undefined,className);d.append(el('summary',title),content);return d;
+  }
   function renderDetail() {
-    const t=byId.get(selected), q=t.diagnostic_question;
-    $('detail').replaceChildren(el('span',`${t.domain} / ${t.level}`,'pill'),el('h2',t.name),el('p',t.description),el('p',`${t.cefr_scope} · 教学范围推断`,'small'));
-    const criteria=el('ul'); t.mastery_criteria.forEach(item=>criteria.append(el('li',item))); appendSection('观察什么',criteria);
-    const sample=el('div',undefined,'sample'); sample.append(el('p',q.question));
-    if (q.script) {
-      sample.append(button('播放设备语音示范',()=>speak(q.script)));
-      const script=el('details'); script.append(el('summary','成人朗读脚本（听力时不要给孩子看）'),el('p',q.script)); sample.append(script);
+    const t=byId.get(selected),q=t.diagnostic_question;
+    const header=el('div',undefined,'task-heading');
+    const heading=el('div');heading.append(el('span',`${t.domain} · ${t.level}`,'pill'),el('h2',t.name),el('p',t.description));
+    header.append(heading,el('span',status(selected),'task-status'));
+    $('detail').replaceChildren(header);
+    const body=el('div',undefined,'task-layout');
+    const task=el('section',undefined,'task-body');task.setAttribute('aria-label','任务与家长提示');
+    task.append(el('p','做个小任务','section-label'),el('p',q.question,'task-prompt'));
+    if(q.script){
+      task.append(button('播放语音示范',()=>speak(q.script),'listen-button'));
+      const script=el('div');script.append(el('p',q.script),el('p','听力观察时，请让孩子只听，不看脚本。','small'));
+      task.append(fold('成人朗读脚本',script));
     }
-    const answer=el('details'); answer.append(el('summary','成人观察要点 / 参考回答'),el('p',q.answer)); sample.append(answer);
-    sample.append(el('p','再换一个情境：'+q.transfer)); appendSection('试一试',sample);
-    appendSection('怎么练',el('p',t.practice));
-    const form=el('form');
-    const statusLabel=el('label','这次的表现'); statusLabel.htmlFor='observation-status';
-    const select=el('select'); select.id='observation-status';
+    const notes=el('div');const criteria=el('ul');t.mastery_criteria.forEach(item=>criteria.append(el('li',item)));
+    notes.append(criteria,el('p',q.answer));
+    task.append(fold('家长查看：观察要点和参考回答',notes));
+    task.append(fold('换个情境再试',el('p',q.transfer)));
+    task.append(fold('这个能力怎么练',el('p',t.practice)));
+    const form=el('form',undefined,'observation-form');form.setAttribute('aria-label','记录这次表现');
+    form.append(el('h3','记下这次表现'),el('p','按这一次实际完成的情况选择。','small'));
+    const statusLabel=el('label','这次的表现');statusLabel.htmlFor='observation-status';
+    const select=el('select');select.id='observation-status';
     Object.entries(M.statuses).forEach(([value,label])=>{const option=el('option',label);option.value=value;select.append(option);});
-    select.value=records[t.id]?.status || 'unknown';
-    const noteLabel=el('label','材料、提示程度与观察备注'); noteLabel.htmlFor='observation-note';
-    const note=el('textarea');note.id='observation-note';note.maxLength=2000;note.placeholder='例如：换一段对话后需听两遍，能说活动，时间仍需提示。';note.value=records[t.id]?.note || '';
-    const row=el('div',undefined,'save-row');const save=el('button','保存这次观察');save.type='submit';row.append(save);
+    select.value=records[t.id]?.status||'unknown';
+    const noteWrap=el('div');const noteLabel=el('label','材料、提示程度与观察备注');noteLabel.htmlFor='observation-note';
+    const note=el('textarea');note.id='observation-note';note.maxLength=2000;note.placeholder='例如：听两遍能说出活动，时间还需要提示。';note.value=records[t.id]?.note||'';
+    noteWrap.append(noteLabel,note);
+    const noteDetails=fold('补充备注（可选）',noteWrap,'note-details');noteDetails.open=Boolean(note.value);
+    const save=el('button','保存这次观察','primary-button');save.type='submit';
+    const updated=el('p',records[t.id]?'最近记录：'+new Date(records[t.id].updated_at).toLocaleDateString('zh-CN'):'还没观察过这一项','small record-date');
     const clear=button('清除此项记录',()=>{
       const next={...records};delete next[t.id];
-      try {localStorage.setItem(storageKey,JSON.stringify(M.snapshot(next)));}
+      try{localStorage.setItem(storageKey,JSON.stringify(M.snapshot(next)));}
       catch(error){notify('浏览器无法更新存档，未清除记录。',true);return;}
-      records=next;renderList();renderMap();renderDetail();notify('已清除此项记录，恢复为待确认。');
-    });
-    clear.disabled=!records[t.id];row.append(clear);
-    const updated=el('span',records[t.id] ? '最近记录：'+new Date(records[t.id].updated_at).toLocaleDateString('zh-CN') : '尚无观察记录','small');
-    form.append(statusLabel,select,noteLabel,note,row,updated);
+      records=next;renderList();renderMap();renderDetail();updateRecordCount();notify('已清除此项记录，恢复为待确认。');
+    },'text-button');clear.disabled=!records[t.id];
+    form.append(statusLabel,select,noteDetails,save,updated,fold('更多记录操作',clear,'record-actions'));
     form.addEventListener('submit',event=>{
       event.preventDefault();
-      const next={...records,[t.id]:{status:select.value,note:note.value,updated_at:new Date().toISOString()}};
-      records=next;
-      let persisted=true;
-      try { localStorage.setItem(storageKey,JSON.stringify(M.snapshot(records))); } catch(error) { persisted=false; }
-      renderList();renderMap();
+      records={...records,[t.id]:{status:select.value,note:note.value,updated_at:new Date().toISOString()}};
+      let persisted=true;try{localStorage.setItem(storageKey,JSON.stringify(M.snapshot(records)));}catch(error){persisted=false;}
+      renderList();renderMap();updateRecordCount();
       updated.textContent='最近记录：'+new Date(records[t.id].updated_at).toLocaleDateString('zh-CN');
-      clear.disabled=false;
-      notify(persisted?'已保存本次观察。建议更换材料，隔几天复核。':'浏览器无法保存：本次记录暂留在页面中，请导出备份。',!persisted);
+      clear.disabled=false;header.querySelector('.task-status').textContent=status(t.id);
+      notify(persisted?'已保存。下次换个内容，再看看能否独立完成。':'浏览器无法保存：请从右上角「观察记录」导出备份。',!persisted);
     });
-    appendSection('记录观察',form);
-    $('detail').append(el('p','本次独立完成不等于稳定掌握，也不推断其他节点已掌握。','small'));
-    relationSection('往前检查',deps.filter(d=>d.topicId===selected),'prerequisiteId');
-    const after=deps.filter(d=>d.prerequisiteId===selected);
-    if (after.length) relationSection('接下来会用到',after,'topicId');
-    const sources=el('p',undefined,'small');t.source_ids.forEach(id=>{const s=profile.sources.find(x=>x.id===id);const a=el('a',s.title+' ');a.href=s.url;a.target='_blank';a.rel='noopener noreferrer';sources.append(a);});appendSection('参考范围',sources);
+    body.append(task,form);$('detail').append(body);
+    const connections=el('div',undefined,'task-connections');
+    connections.append(button('查看这个能力的前后关系',()=>{view='nearby';setMode('map');},'text-button'),el('p','本次独立完成不等于稳定掌握，也不会自动勾选其他能力。','small'));
+    $('detail').append(connections);
+    const relationContent=el('div',undefined,'relation-content');
+    const before=deps.filter(d=>d.topicId===selected),after=deps.filter(d=>d.prerequisiteId===selected);
+    for(const [title,edges,key] of [['往前检查',before,'prerequisiteId'],['接下来会用到',after,'topicId']]){
+      relationContent.append(el('h3',title));
+      if(!edges.length)relationContent.append(el('p','本图没有设置其他直接关系。','small'));
+      edges.forEach(edge=>{const b=button(byId.get(edge[key]).name,()=>choose(edge[key],true),'relation');b.append(el('small',edge.reason));relationContent.append(b);});
+    }
+    const sources=el('p',undefined,'small');t.source_ids.forEach(id=>{const source=profile.sources.find(x=>x.id===id);const a=el('a',source.title+' ');a.href=source.url;a.target='_blank';a.rel='noopener noreferrer';sources.append(a);});
+    relationContent.append(el('h3','参考范围'),sources,el('p',t.cefr_scope+' · 具体阶段对应为教学设计推断。','small'));
+    $('detail').append(fold('展开前后能力与参考依据',relationContent,'connections-details'));
   }
   try {
     [topics,deps,profile]=await Promise.all(['topics','dependencies','profile'].map(async name=>{const response=await fetch('data/'+name+'.json');if(!response.ok)throw new Error('加载失败');return response.json();}));
     byId=new Map(topics.map(t=>[t.id,t]));
-    selected=byId.has(location.hash.slice(1))?location.hash.slice(1):'ye_s02';
+    selected=byId.has(location.hash.slice(1))?location.hash.slice(1):'ye_l03';
     if (!profile.focus_levels.includes(byId.get(selected).level)) $('scope').value=byId.get(selected).level;
     try { const saved=localStorage.getItem(storageKey); if(saved)records=M.validateProgress(JSON.parse(saved),topics); } catch(error) { notify('本机记录无法读取，已保留原存档。可尝试导入之前的备份。',true); }
     profile.domains.forEach(domain=>{const option=el('option',domain);option.value=domain;$('domain').append(option);});
@@ -188,7 +239,10 @@
     $('view-overview').addEventListener('click',()=>{view='overview';renderMap();});
     $('view-nearby').addEventListener('click',()=>{view='nearby';renderMap();});
     $('fit').addEventListener('click',()=>{if(cy)cy.fit(undefined,24);});
-    profile.entry_points.forEach(id=>$('entry-points').append(button(byId.get(id).domain,()=>{choose(id);if(!matchMedia('(max-width:650px)').matches)$('main').scrollIntoView({behavior:'smooth'});})));
+    $('mode-practice').addEventListener('click',()=>setMode('practice'));
+    $('mode-map').addEventListener('click',()=>setMode('map'));
+    $('open-task').addEventListener('click',scrollToTask);
+    $('session-topic').addEventListener('change',()=>choose($('session-topic').value,false));
     $('export').addEventListener('click',()=>{
       const a=el('a');const url=URL.createObjectURL(new Blob([JSON.stringify(M.snapshot(records),null,2)],{type:'application/json'}));
       a.href=url;a.download='english-map-observations.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('已导出观察记录，请保留备份。');
@@ -201,12 +255,12 @@
         const merged={...records};let changed=0;
         for(const [id,row] of Object.entries(incoming))if(!merged[id] || Date.parse(row.updated_at)>Date.parse(merged[id].updated_at)){merged[id]=row;changed++;}
         localStorage.setItem(storageKey,JSON.stringify(M.snapshot(merged)));records=merged;
-        renderList();renderMap();renderDetail();notify(`已合并 ${changed} 项较新的观察记录，保留本机较新记录。`);
+        renderList();renderMap();renderDetail();renderSessionPicker();notify(`已合并 ${changed} 项较新的观察记录，保留本机较新记录。`);
       } catch(error) { notify(error instanceof SyntaxError?'无法读取 JSON，未导入任何内容。':error.message,true); }
       event.target.value='';
     });
     window.addEventListener('hashchange',()=>{if(byId.has(location.hash.slice(1)))choose(location.hash.slice(1));});
     const media=matchMedia('(prefers-color-scheme: dark)');media.addEventListener('change',()=>{if(view==='nearby')renderMap();});
-    renderList();renderMap();renderDetail();
+    renderList();renderMap();renderDetail();renderSessionPicker();
   } catch(error) { notify('地图数据未能加载。请通过本地服务或部署地址打开，并刷新重试。',true);$('list').textContent='数据加载失败';$('detail').textContent='暂时无法显示任务。'; }
 })();
