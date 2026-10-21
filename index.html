@@ -1,101 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>中小学知识图谱</title>
-<meta name="description" content="数学（小学到高中）和英语（三年级到高中）的知识图谱。沿先修关系自适应出题，从选中的知识点往回找到薄弱根因。">
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20fill%3D%22%23dff3ef%22%20stroke%3D%22%230f6e62%22%20stroke-width%3D%221.7%22%20stroke-linejoin%3D%22round%22%20d%3D%22M6.6%204.8H17L27.4%2015.2V25Q27.4%2027.4%2025.2%2027.4H6.6Q4.4%2027.4%204.4%2025.2V7Q4.4%204.8%206.6%204.8Z%22%2F%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M17.7%206.3%2026.1%2014.7H17.7Z%22%2F%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%230f6e62%22%20stroke-width%3D%221.35%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M17.7%206.3V14.7H26.1%22%2F%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%230f6e62%22%20stroke-width%3D%222.15%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20d%3D%22M8.3%2024.2H12.4Q14.2%2024.2%2014.2%2022.4V20.2Q14.2%2018.6%2016%2018.6H18.8%22%2F%3E%3Cpath%20fill%3D%22%230f6e62%22%20d%3D%22M18.5%2016.85%2023%2018.6%2018.5%2020.35Z%22%2F%3E%3C%2Fsvg%3E">
-<script>
-(function () {
-  var id = location.hash.replace(/^#/, '');
-  try { id = decodeURIComponent(id); } catch (e) { return; }
-  if (/^cnm_[A-Za-z0-9]+$/.test(id)) {
-    document.documentElement.style.visibility = 'hidden';
-    location.replace('explore/#' + encodeURIComponent(id));
-  } else if (/^cne_[A-Za-z0-9]+$/.test(id)) {
-    document.documentElement.style.visibility = 'hidden';
-    location.replace('explore/?subject=english#' + encodeURIComponent(id));
-  }
-})();
-</script>
-<link rel="stylesheet" href="assets/site.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Pre-A1 至 B2 的儿童英语能力路径，默认突出孩子 A1–A2 附近的学习内容。">
+  <title>英语成长地图 · Pre-A1 → B2</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="page-home">
-<a class="top-banner" href="https://test.pansgo.com/?from=math-top" target="_blank" rel="noopener">🧠 测评中心：儿童智商、情商，成人情商、人生四象限</a>
-<header class="site-header">
-  <a class="brand" href="./">
-    <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path fill="var(--logo-sheet)" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M6.6 4.8H17L27.4 15.2V25Q27.4 27.4 25.2 27.4H6.6Q4.4 27.4 4.4 25.2V7Q4.4 4.8 6.6 4.8Z"/><path fill="var(--logo-fold)" d="M17.7 6.3 26.1 14.7H17.7Z"/><path fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" d="M17.7 6.3V14.7H26.1"/><path fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" d="M8.3 24.2H12.4Q14.2 24.2 14.2 22.4V20.2Q14.2 18.6 16 18.6H18.8"/><path fill="currentColor" d="M18.5 16.85 23 18.6 18.5 20.35Z"/></svg>
-    <span class="brand-copy">
-      <span class="brand-name">中小学知识图谱</span>
-      <span class="brand-kicker">学习路径</span>
-    </span>
-  </a>
-  <nav class="site-nav" aria-label="主导航">
-    <div class="subject-switch" role="group" aria-label="学科">
-      <a class="nav-link subject-link on" data-subject="math" href="./">数学</a>
-      <a class="nav-link subject-link" data-subject="english" href="./?subject=english">英语</a>
-    </div>
-    <div class="page-links">
-      <a class="nav-link active" href="./" aria-current="page">首页</a>
-      <a class="nav-link" href="explore/">知识图谱</a>
-      <a class="nav-link" href="diagnose/">诊断</a>
-      <a class="nav-link" href="https://github.com/xiaoyang111222/cn-math-taxonomy" target="_blank" rel="noopener noreferrer">关于</a>
-    </div>
-  </nav>
+<body>
+<a class="skip" href="#main">跳到学习地图</a>
+<header class="header">
+  <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">E</span>英语成长地图</a>
+  <nav aria-label="主导航"><a href="#main">学习地图</a><a href="#start">从哪里开始</a><a href="#sources">依据与说明</a><a href="https://github.com/goldenslimea/english-learning-map">项目仓库</a></nav>
 </header>
-<main class="home">
-  <section class="hero">
-    <p class="eyebrow">数学：小学到高中 · 英语：三年级到高中</p>
-    <h1>先找到真正没学会的那一步</h1>
-    <p class="lede">沿着先修关系自适应出题。数学从小学追到高中，英语覆盖三年级到高中。从你选的知识点往回追，定位薄弱根因，并给出一条按学习顺序排起的路径。</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary btn-lg" href="diagnose/">开始诊断</a>
-      <a class="btn btn-lg" href="explore/">浏览知识图谱</a>
-    </div>
-    <p class="quiet-link"><a href="diagnose/?target=cnm_221&amp;demo=1">先看一遍演示：配方法</a></p>
-  </section>
-
-  <h2 class="section-title">三步</h2>
-  <ol class="steps">
-    <li>
-      <span class="step-no">1</span>
-      <h3>选知识点</h3>
-      <p>数学从一年级到高中必修和选择性必修，英语从三年级到高中。搜索或按册、章找到想检查的内容。</p>
-    </li>
-    <li>
-      <span class="step-no">2</span>
-      <h3>自适应答题</h3>
-      <p>先问目标本身。答错再出一道同级或更容易的题，仍然错才沿着先修往回追。</p>
-    </li>
-    <li>
-      <span class="step-no">3</span>
-      <h3>找到根因和学习路径</h3>
-      <p>标出薄弱根因和不稳的点，并按年级从低到高排出建议补学的顺序。</p>
-    </li>
-  </ol>
-
-  <h2 class="section-title">图谱里有什么</h2>
-  <div class="stat-grid" id="stats">
-    <div class="stat-card"><div class="stat-num" id="n-topics">…</div><div class="stat-label">知识点</div></div>
-    <div class="stat-card"><div class="stat-num" id="n-edges">…</div><div class="stat-label">先修边</div></div>
-    <div class="stat-card"><div class="stat-num" id="n-questions">…</div><div class="stat-label">题目</div></div>
-    <div class="stat-card"><div class="stat-num" id="n-standards">…</div><div class="stat-label">课标条目</div></div>
+<section class="intro">
+  <div><p class="eyebrow">YOUNG LEARNERS / PRE-A1 → B2</p><h1>看见下一步，<br>也看见更远的成长。</h1><p class="lead">Pre-A1 到 B2 的 90 个能力点。默认聚焦孩子 A1–A2 附近，也能展开完整成长路径。</p></div>
+  <aside class="orientation"><span class="pill">Year 4 · 适龄内容</span><h2>先观察，再确定起点</h2><p>当前范围来自家长描述，尚未分项测评。每个能力点均从「待确认」开始；Year 4 不等同于国内四年级，也不决定英语等级。</p><p class="small">图中阶段是教学安排建议，不是官方 CEFR 知识点分级。</p></aside>
+</section>
+<main id="main">
+  <div class="section-heading"><div><p class="eyebrow">LEARNING MAP</p><h2>一张地图，看眼前，也看远处</h2></div><div class="tools"><button id="export" type="button">导出观察记录</button><label class="file-label">导入记录<input id="import" type="file" accept="application/json,.json"></label></div></div>
+  <div class="phase-legend" aria-label="阶段图例"><span><i class="dot foundation"></i>向前查基础 · Pre-A1</span><span><i class="dot bridge"></i>孩子附近 · A1–A2</span><span><i class="dot next"></i>向后看目标 · B1–B2</span><span>虚线箭头：建议先练 → 后练</span></div>
+  <p id="message" role="status" aria-live="polite"></p>
+  <div class="workspace">
+    <aside class="catalog" aria-label="能力点目录">
+      <label for="scope">学习范围</label><select id="scope"><option value="focus">孩子附近 · A1–A2</option><option value="all">全路径 · Pre-A1–B2</option><option>Pre-A1</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option></select>
+      <label for="domain">能力领域</label><select id="domain"><option value="">全部领域</option></select>
+      <label for="search">查找能力点</label><input id="search" type="search" placeholder="如：跟读、过去、故事">
+      <p id="count" class="small"></p><div id="list">正在加载…</div>
+    </aside>
+    <section class="map-area" aria-label="能力关系图">
+      <div class="map-toolbar"><div class="view-buttons" role="group" aria-label="地图范围"><button type="button" id="view-overview" aria-pressed="true">阶段路线</button><button type="button" id="view-nearby" aria-pressed="false">选中点附近</button></div><button type="button" id="fit">适配画面</button></div>
+      <div id="cy" role="img" aria-label="能力关系图。所有能力点及前后关系也可通过目录和详情中的按钮访问。"></div>
+      <p class="map-hint" id="map-hint">点选能力点，查看任务和练习方法。可拖动、缩放。</p>
+    </section>
+    <aside id="detail" class="detail" aria-label="选中能力点详情" aria-live="polite">正在加载…</aside>
   </div>
-  <p class="stat-note">以上数字在打开页面时从当前学科的知识点、先修、题库和课标统计。默认是数学。</p>
-  <div id="load-error" class="load-error" hidden></div>
-
-  <h2 class="section-title">按年级进入</h2>
-  <div class="grade-grid" id="grades" aria-busy="true"></div>
-  <a class="iq-card" href="https://test.pansgo.com/?from=math-home" target="_blank" rel="noopener">
-    <strong>🧠 儿童智商测试</strong>
-    <span class="iq-sub">找规律 · 补图案 · 空间想象</span>
-    <span class="iq-note">趣味测评，与数学诊断无关</span>
-  </a>
+  <section id="start" class="start-section"><p class="eyebrow">FIRST STEPS</p><h2>第一次怎么用</h2><div class="start-grid"><article><span class="step-number">01</span><h3>先各试一项</h3><p>分两三天观察听、说、读、写，顺便看语法和词汇。每次约 10–15 分钟，是可调整的起步安排。</p><div id="entry-points" class="entry-points"></div></article><article><span class="step-number">02</span><h3>卡在哪里，往前找</h3><p>点「选中点附近」查看前置能力。读不懂短文，分别检查解码、词义和句子理解；能读出来不代表已经理解。</p><p>所有边都是可调整的建议关系，不锁课程；答对一个任务也不会自动勾选其他能力。</p></article><article><span class="step-number">03</span><h3>跟读之后，再用一次</h3><p>先听懂 → 分句模仿 → 关掉录音 → 换内容自己说。跟读每天可先试 5–8 分钟，其余时间留给理解、问答、阅读或写作。</p><p>建议换材料、隔几天再观察。这里的任务是家庭观察样例，不用于判定 CEFR 等级。</p></article></div></section>
+  <section id="sources" class="sources"><h2>依据与说明</h2><p>结构借鉴 <a href="https://github.com/xiaoyang111222/cn-math-taxonomy" target="_blank" rel="noopener noreferrer">xiaoyang111222 / cn-math-taxonomy</a> 的知识点、观察标准、任务与前置关系，并使用其图形库。本版仅保留独立组织的英语能力架构，移除了原版其他学科、教材目录、题库、诊断页面和部署配置。保留改编署名与 CC BY-NC 4.0 许可。</p><p>能力范围参考剑桥英语 <a href="https://www.cambridgeenglish.org/exams-and-tests/starters/">Pre A1 Starters</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/movers/">A1 Movers</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/flyers/">A2 Flyers</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/preliminary-for-schools/">B1 Preliminary for Schools</a>、<a href="https://www.cambridgeenglish.org/exams-and-tests/first-for-schools/">B2 First for Schools</a> 的公开能力说明，练习设计参考 <a href="https://www.britishcouncil.org/voices-magazine/how-help-children-speak-english-confidence">British Council 儿童口语建议</a>。</p><p>具体节点、顺序、阶段对应与任务为本版教学设计推断，未经教师或测评校准。全路径是能力骨架，不是穷尽的课程大纲；尤其 B1/B2 的微型任务需用更长、更多样材料复核。完成单题不代表达到该级别。</p><p>观察记录只保存在当前浏览器，可导出备份或转移设备；不会自动同步到 GitHub。听力提供成人朗读脚本；可选设备语音仅作练习示范，不提供口语自动评分。</p></section>
 </main>
-<footer class="site-footer">
-  <p><a href="https://github.com/xiaoyang111222/cn-math-taxonomy/issues/new/choose">提交 Issue</a></p>
-</footer>
-<script src="assets/home.js"></script>
+<footer><span>一点点听懂，一点点说出来。</span><a href="LICENSE">CC BY-NC 4.0</a><a href="https://github.com/goldenslimea/english-learning-map">项目仓库</a></footer>
+<script src="assets/vendor/cytoscape.min.js"></script>
+<script src="assets/vendor/dagre.min.js"></script>
+<script src="assets/vendor/cytoscape-dagre.js"></script>
+<script src="model.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

@@ -1,12 +1,7 @@
-node_modules/
 .DS_Store
+node_modules/
 *.log
-claude*.log
-*.tgz
-*.zip
 __pycache__/
 *.pyc
 .env
 .env.*
-PROMPT*.md
-chain.sh

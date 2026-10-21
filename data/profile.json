@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "title": "英语成长地图 · Pre-A1 → B2",
+  "learner_context": {
+    "school_year": "Year 4",
+    "reported_level": "A1–A2 之间",
+    "assessment_status": "家长描述，未分项测评",
+    "age": null,
+    "curriculum": null
+  },
+  "phases": {
+    "foundation": "向前查基础",
+    "bridge": "孩子附近",
+    "next": "向后看目标"
+  },
+  "domains": [
+    "听力",
+    "口语与语音",
+    "阅读",
+    "写作",
+    "语法与句型",
+    "词汇与词块"
+  ],
+  "entry_points": [
+    "ye_l03",
+    "ye_s03",
+    "ye_r03",
+    "ye_w03",
+    "ye_g03",
+    "ye_v03"
+  ],
+  "sources": [
+    {
+      "id": "cambridge-movers",
+      "title": "Cambridge English A1 Movers — public ability summary",
+      "url": "https://www.cambridgeenglish.org/exams-and-tests/movers/"
+    },
+    {
+      "id": "cambridge-flyers",
+      "title": "Cambridge English A2 Flyers — public ability summary",
+      "url": "https://www.cambridgeenglish.org/exams-and-tests/flyers/"
+    },
+    {
+      "id": "british-speaking",
+      "title": "British Council — Help children speak with confidence",
+      "url": "https://www.britishcouncil.org/voices-magazine/how-help-children-speak-english-confidence"
+    },
+    {
+      "id": "cambridge-starters",
+      "title": "Cambridge English Pre A1 Starters — ability summary",
+      "url": "https://www.cambridgeenglish.org/exams-and-tests/starters/"
+    },
+    {
+      "id": "cambridge-b1",
+      "title": "Cambridge English B1 Preliminary for Schools — ability summary",
+      "url": "https://www.cambridgeenglish.org/exams-and-tests/preliminary-for-schools/"
+    },
+    {
+      "id": "cambridge-b2",
+      "title": "Cambridge English B2 First for Schools — ability summary",
+      "url": "https://www.cambridgeenglish.org/exams-and-tests/first-for-schools/"
+    }
+  ],
+  "notes": [
+    "Pre-A1 至 B2 的五阶段能力骨架，并非完整课程大纲或官方逐节点分级。",
+    "孩子附近默认突出 A1–A2；具体分项待观察，不按年龄或 Year 4 推断等级。",
+    "语言能力可不同步；所有边都是教学衔接建议，不锁课程，不自动推断其他节点掌握。",
+    "90 个能力点均配家庭观察样例；尤其 B1/B2 的微型任务需更长、更多样材料复核，不能用一次表现判级。",
+    "不设升级期限、词数硬门槛或考试通过率。"
+  ],
+  "levels": [
+    "Pre-A1",
+    "A1",
+    "A2",
+    "B1",
+    "B2"
+  ],
+  "focus_levels": [
+    "A1",
+    "A2"
+  ]
+}
